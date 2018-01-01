@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>跳一跳辅助工具</title>
+  <script src="https://cdn.bootcss.com/jquery/1.2.3/jquery.min.js"></script>
+</head>
+
+<body>
+  <h2>用你的鼠标跳一跳</h1>
+    <div>
+      <img id="gameScreen" onclick="jump(event)" src="screencap.jpg" style="width:320px;height:480px;" />
+      <br>
+      <button id="btnStart" style="width:320px;height:30px;background-color:rgb(90,126,228);color:white;margin-top:10px">开始</button>
+    </div>
+    <div id='log'></div>
+    <script>
+      // You can also require other files to run in this process
+      const utils = require('./renderer.js')
+      let jumpPoint = [];
+      let jumpTip = ['起点', '终点']
+      let $log = $("#log")
+
+      $("#btnStart").click(function () {
+        utils.fetchScreenCap(refreshGameScreen)
+      })
+
+      function refreshGameScreen(imgDir){
+        $("#gameScreen").attr("src", imgDir+"?" + new Date());
+      }
+
+      function jump(event) {
+        let data = getXAndY(event);
+        let x = data.x;
+        let y = data.y;
+
+        if (jumpPoint.length === 0) {
+          $log.html('')
+        }
+
+        jumpPoint.push({ x: x, y: y })
+
+        $log.append(jumpTip[jumpPoint.length - 1] + "：" + y + " , " + x + '<br/>');
+
+
+        if (jumpPoint.length === 2) {
+          var start = jumpPoint[0]
+          var end = jumpPoint[1]
+          var distance = Math.sqrt(Math.pow((start.x - end.x), 2) + Math.pow((start.y - end.y), 2));
+
+          $log.append('发送点击...<br/>')
+          $log.append("按压毫秒:"+distance)
+          utils.sendJump(distance,()=>utils.fetchScreenCap(refreshGameScreen))
+
+          jumpPoint.length = 0
+        }
+
+      }
+
+
+      function getXAndY(event) {
+        event = event || window.event;
+        var mousePos = mouseCoords(event);
+        var x = mousePos.x;
+        var y = mousePos.y;
+
+        var x1 = $("#gameScreen").offset().left;
+        var y1 = $("#gameScreen").offset().top;
+
+        var x2 = x - x1;
+        var y2 = y - y1;
+        return { x: x2, y: y2 };
+      }
+
+      function mouseCoords(event) {
+        if (event.pageX || event.pageY) {
+          return { x: event.pageX, y: event.pageY };
+        }
+        return {
+          x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
+          y: event.clientY + document.body.scrollTop - document.body.clientTop
+        };
+      }
+
+    </script>
+</body>
+
+</html>
