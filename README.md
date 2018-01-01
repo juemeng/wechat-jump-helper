@@ -19,7 +19,7 @@ npm start
 
 Note:如果需要生成可执行文件，执行：
 ```
-npm run dist
+npm run dist or yarn dist
 ```
 
 
