@@ -4,7 +4,15 @@
 
 ## 使用说明
 
-使用命令行工具执行下面的命令
+安卓手机连接到电脑，开发者模式打开点按反馈
+执行:
+```
+adb devices
+```
+查看是否连接成功
+
+
+执行下面的命令
 
 ```bash
 # Clone this repository
@@ -19,7 +27,7 @@ npm start
 
 Note:如果需要生成可执行文件，执行：
 ```
-npm run dist or yarn dist
+npm run dist 或者 yarn dist
 ```
 
 
